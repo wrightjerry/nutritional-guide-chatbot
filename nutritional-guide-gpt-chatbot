@@ -1,0 +1,20 @@
+import openai
+import gradio
+
+openai.api_key = "####"
+
+messages = [{"role": "system", "content": "You are a nutritional guide expert that offers personalized nutrition advice, answers diet-related queries, and suggests healthy recipes based on individual preferences and dietary restrictions."}]
+
+def CustomChatGPT(current_user_input):
+    messages.append({"role": "user", "content": current_user_input})
+    response = openai.ChatCompletion.create(
+        model = "gpt-3.5-turbo",
+        messages = messages
+    )
+    ChatGPT_reply = response["choices"][0]["message"]["content"]
+    messages.append({"role": "assistant", "content": ChatGPT_reply})
+    return ChatGPT_reply
+
+demo = gradio.Interface(fn=CustomChatGPT, inputs = "text", outputs = "text", title = "Nutritional Guide Expert")
+
+demo.launch(share=True)
